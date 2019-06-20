@@ -49,11 +49,12 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/done"
                 android:layout_margin="7dp"
-                android:background="@drawable/donee"
+                android:background="@drawable/cancell"
                 android:textSize="10dp"
                 android:layout_weight="1"
                 android:shadowDy="4"
-                android:text="Canel"/>
+                android:textColor="#FF0040"
+                android:text="Cancel"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,8 +62,9 @@
                 android:layout_margin="7dp"
                 android:background="@drawable/donee"
                 android:textSize="10dp"
+                android:textColor="#01DF01"
                 android:layout_weight="1"
-                android:text="Cancel"/>
+                android:text="Complete"/>
 
 
         </LinearLayout>

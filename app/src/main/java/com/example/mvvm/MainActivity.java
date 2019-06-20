@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(llm);
-        RecyclerViewAdapter rva = new RecyclerViewAdapter(orders);
+        RecyclerViewAdapter rva = new RecyclerViewAdapter(orders, this);
         initializeData();
         initializeAdapter();
     }
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initializeAdapter(){
-        RecyclerViewAdapter rva = new RecyclerViewAdapter(orders);
+        RecyclerViewAdapter rva = new RecyclerViewAdapter(orders, this);
         recyclerView.setAdapter(rva);
     }
 
