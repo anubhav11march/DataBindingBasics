@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView.addOnScrollListener(new recyclerViewOnClickListener(linearLayoutManager) {
             @Override
             public int getTotalPageCount() {
-                return 10;
+                return 0;
             }
 
             @Override
@@ -115,10 +115,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView.setAdapter(rva);
     }
 
+    public static int x=0;
+
     public void loadJsondata(){
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+
         Log.v("AAA", "Load");
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 URL_DATA, new Response.Listener<String>() {
@@ -128,12 +131,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 try {
                     Log.v("AAA", "Trying");
                     JSONObject jsonObject = new JSONObject(response);
-                    JSONArray array = jsonObject.getJSONArray(response);
-                    for (int i = 0; i < 10; i++) {
+                    JSONArray array = jsonObject.getJSONArray("items");
+                    int i;
+                    for (i = x; i < x+10; i++) {
                         JSONObject jo = array.getJSONObject(i);
-                        FoodList food = new FoodList(jo.getString("login"), jo.getString("url"), jo.getInt("id"));
+                        Log.v("AAAA", ""+i);
+                        FoodList food = new FoodList(jo.getString("login"), jo.getString("type"), jo.getInt("id"));
                         orders.add(food);
                     }
+                    x=i;
                     adapter = new RecyclerViewAdapter(orders, getApplicationContext());
                     recyclerView.setAdapter(adapter);
                 } catch (JSONException e) {

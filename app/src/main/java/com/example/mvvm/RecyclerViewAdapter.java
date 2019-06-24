@@ -1,5 +1,6 @@
 package com.example.mvvm;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -154,6 +155,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
     public static class viewHolder extends BaseViewHolder{
+//        public final ItemBinding binding;
         CardView cv;
         static TextView name;
         static TextView price;
@@ -164,7 +166,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             cv = (CardView) itemView.findViewById(R.id.cv);
             name = (TextView) itemView.findViewById(R.id.name);
             price = (TextView) itemView.findViewById(R.id.price);
-            pic = (ImageView) itemView.findViewById(R.id.pic);
             final ViewGroup transitionsContainer = (ViewGroup) itemView.findViewById(R.id.cv);
             cancel = (Button) transitionsContainer.findViewById(R.id.done);
             done = (Button) transitionsContainer.findViewById(R.id.cancel);
@@ -192,6 +193,15 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
             });
         }
+
+//        public viewHolder(ItemBinding itemBinding){
+//            super(itemBinding.getRoot());
+//            this.binding = itemBinding;
+//        }
+//
+//        public void bind(ClipData.Item item){
+//
+//        }
 
         @Override
         public void clear() {
