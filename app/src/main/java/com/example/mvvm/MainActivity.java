@@ -1,8 +1,15 @@
 package com.example.mvvm;
 
 import android.app.ProgressDialog;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mvvm.databinding.ActivityMainBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,14 +50,22 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private RecyclerViewAdapter rva;
     private List<FoodList> orders;
     private int itemCount =0;
+    private ActivityMainBinding binding;
+
+
+
+    private MutableLiveData<String> stringLd;
 
     private static final String URL_DATA = "https://api.github.com/search/users?q=language:java+location:lagos";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setLifecycleOwner(this);
+//        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
 //        loadJsondata();
 //        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
 //        swipeRefreshLayout.setOnRefreshListener(this);
@@ -60,6 +76,22 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView.setLayoutManager(linearLayoutManager);
 //        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 //        rva = new RecyclerViewAdapter(orders, this);
+//        vm model = ViewModelProviders.of(this).get(vm.class);
+//        model.getFood().observe(this, new Observer<List<FoodList>>() {
+//            @Override
+//            public void onChanged(@Nullable List<FoodList> foodLists) {
+//                adapter = new RVA(MainActivity.this, foodLists);
+//                recyclerView.setAdapter(adapter);
+//            }
+//        });
+
+
+
+
+
+
+
+//
         orders = new ArrayList<>();
         initializeAdapter();
         loadJsondata();
@@ -89,7 +121,37 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 //        loadJsondata();
 //        initializeData();
 
+
+        stringLd = new MutableLiveData<>();
+
+
+        stringLd.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                binding.setTitle(s);
+            }
+        });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stringLd.setValue("abcde");
+            }
+        }, 5000);
+
+ new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stringLd.setValue("adsad");
+            }
+        }, 6000);
+
+
     }
+
+
+
+
 //    public void initializeData(){
 //        orders = new ArrayList<>();
 //        orders.add(new Order("Rajma Chaawal", "Rs. 100", R.drawable.rajma));
@@ -111,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 //    }
 
     public void initializeAdapter(){
-         rva = new RecyclerViewAdapter(orders, this);
+         rva = new RecyclerViewAdapter(orders, this, binding);
         recyclerView.setAdapter(rva);
     }
 
@@ -140,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         orders.add(food);
                     }
                     x=i;
-                    adapter = new RecyclerViewAdapter(orders, getApplicationContext());
+                    adapter = new RecyclerViewAdapter(orders, getApplicationContext(), binding);
                     recyclerView.setAdapter(adapter);
                 } catch (JSONException e) {
                     Log.v("AAA", "Caught");

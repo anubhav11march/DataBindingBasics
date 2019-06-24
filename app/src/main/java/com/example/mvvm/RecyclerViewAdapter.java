@@ -1,9 +1,13 @@
 package com.example.mvvm;
 
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.mvvm.R;
 
+import com.example.mvvm.databinding.ActivityMainBinding;
 import com.transitionseverywhere.extra.Scale;
 
 import java.util.ArrayList;
@@ -30,16 +35,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<FoodList> orders;
     static Context ctx;
     public static final int ITEM =0;
     public static final int LOADING = 1;
     private boolean isLoadingAdded = false;
+    private ActivityMainBinding binding;
+    private MutableLiveData<String> stringLd;
 
-    RecyclerViewAdapter(List<FoodList> orders, Context ctx){
+    RecyclerViewAdapter(List<FoodList> orders, Context ctx, ActivityMainBinding binding){
         this.orders = orders;
         this.ctx = ctx;
+        this.binding = binding;
     }
 
     @NonNull
@@ -54,6 +63,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 //                return null;
 //        }
 
+//        stringLd = new MutableLiveData<>();
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rvlayout, viewGroup, false);
         viewHolder vh = new viewHolder(view);
         final ViewGroup transitionsContainer = (ViewGroup) view.findViewById(R.id.cv);
@@ -66,6 +76,19 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         final FoodList foodList = orders.get(i);
         viewHolder.name.setText(foodList.getName());
         viewHolder.price.setText(foodList.getPrice());
+//        stringLd.observe(binding.getLifecycleOwner(), new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//
+//            }
+//        });
+//        stringLd.observe(binding.getLifecycleOwner(), new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//
+//            }
+//        });
+
     }
 
     @Override
@@ -155,7 +178,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
     public static class viewHolder extends BaseViewHolder{
-//        public final ItemBinding binding;
+
         CardView cv;
         static TextView name;
         static TextView price;
@@ -194,14 +217,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             });
         }
 
-//        public viewHolder(ItemBinding itemBinding){
-//            super(itemBinding.getRoot());
-//            this.binding = itemBinding;
-//        }
-//
-//        public void bind(ClipData.Item item){
-//
-//        }
 
         @Override
         public void clear() {
