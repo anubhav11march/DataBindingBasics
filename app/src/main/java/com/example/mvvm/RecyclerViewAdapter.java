@@ -17,25 +17,42 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.mvvm.R;
 
 import com.transitionseverywhere.extra.Scale;
 
+import java.util.ArrayList;
 import java.util.List;
 
-class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
-    List<MainActivity.Order> orders;
-    static Context ctx;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    RecyclerViewAdapter(List<MainActivity.Order> orders, Context ctx){
+class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+    private List<FoodList> orders;
+    static Context ctx;
+    public static final int ITEM =0;
+    public static final int LOADING = 1;
+    private boolean isLoadingAdded = false;
+
+    RecyclerViewAdapter(List<FoodList> orders, Context ctx){
         this.orders = orders;
         this.ctx = ctx;
     }
 
     @NonNull
     @Override
-    public viewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+//        switch (i){
+//            case ITEM:
+//                return new viewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rvlayout), viewGroup, false);
+//            case LOADING:
+//                return new FooterHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rvlayout), viewGroup, false);
+//            default:
+//                return null;
+//        }
+
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rvlayout, viewGroup, false);
         viewHolder vh = new viewHolder(view);
         final ViewGroup transitionsContainer = (ViewGroup) view.findViewById(R.id.cv);
@@ -43,10 +60,72 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull viewHolder viewHolder, int i) {
-        viewHolder.name.setText(orders.get(i).name);
-        viewHolder.price.setText(orders.get(i).price);
-        viewHolder.pic.setImageResource(orders.get(i).picId);
+    public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int i) {
+        baseViewHolder.onBind(i);
+        final FoodList foodList = orders.get(i);
+        viewHolder.name.setText(foodList.getName());
+        viewHolder.price.setText(foodList.getPrice());
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return orders == null ? 0 : orders.size();
+    }
+
+    public void add(FoodList response){
+        orders.add(response);
+        notifyItemInserted(orders.size()-1);
+    }
+
+    public void addAll(List<FoodList> items){
+        for(FoodList response: items){
+            add(response);
+        }
+    }
+
+    public void addLoading(){
+        isLoadingAdded = true;
+//        add(new FoodList());
+    }
+
+    private void remove(FoodList foodList){
+        int pos = orders.indexOf(foodList);
+        if(pos > -1){
+            orders.remove(pos);
+            notifyItemRemoved(pos);
+        }
+    }
+
+    private void removeLoading(){
+        isLoadingAdded = false;
+        int pos = orders.size()-1;
+        FoodList foodList = getItem(pos);
+        if(foodList != null){
+            orders.remove(pos);
+            notifyItemRemoved(pos);
+        }
+    }
+
+    public void clear(){
+        while (getItemCount() > 0){
+            remove(getItem(0));
+        }
+    }
+
+    FoodList getItem(int pos){
+        return orders.get(pos);
+    }
+
+//    @Override
+//    public void onBindViewHolder(@NonNull viewHolder viewHolder, int i) {
+//        final FoodList foodList = orders.get(i);
+//        viewHolder.name.setText(foodList.getName());
+//        viewHolder.price.setText(foodList.getPrice());
+//        viewHolder.pic.setImageResource(foodList.getPicId());
+
+//        viewHolder.name.setText(orders.get(i).name);
+//        viewHolder.price.setText(orders.get(i).price);
+//        viewHolder.pic.setImageResource(orders.get(i).picId);
 //        viewHolder.done.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -65,16 +144,19 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
 //                viewHolder.done.setVisibility(View.GONE);
 //            }
 //        });
-    }
+//    }
 
     @Override
     public int getItemCount() {
         return orders.size();
     }
 
-    public static class viewHolder extends RecyclerView.ViewHolder{
+
+
+    public static class viewHolder extends BaseViewHolder{
         CardView cv;
-        TextView name, price;
+        static TextView name;
+        static TextView price;
         ImageView pic;
         Button cancel, done;
         viewHolder(View itemView){
@@ -110,6 +192,27 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
                 }
             });
         }
+
+        @Override
+        public void clear() {
+
+        }
+    }
+
+    public class FooterHolder extends BaseViewHolder {
+        ProgressBar mProgressBar;
+
+
+        FooterHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
     }
 
     @Override
