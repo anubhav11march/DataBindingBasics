@@ -13,6 +13,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     public RecyclerItemTouchHelper(int dragDir, int swipeDir, RecyclerItemTouchHelperListener listener){
         super(dragDir, swipeDir);
         this.listener = listener;
+
     }
 
     @Override
