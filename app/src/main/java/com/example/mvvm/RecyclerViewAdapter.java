@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.mvvm.R;
@@ -36,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
     private List<FoodList> orders;
     static Context ctx;
     public static final int ITEM =0;
@@ -45,7 +46,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private ActivityMainBinding binding;
     private MutableLiveData<String> stringLd;
 
-    RecyclerViewAdapter(List<FoodList> orders, Context ctx, ActivityMainBinding binding){
+    public RecyclerViewAdapter(List<FoodList> orders, Context ctx, ActivityMainBinding binding){
         this.orders = orders;
         this.ctx = ctx;
         this.binding = binding;
@@ -53,7 +54,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public viewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 //        switch (i){
 //            case ITEM:
 //                return new viewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rvlayout), viewGroup, false);
@@ -71,11 +72,25 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int i) {
-        baseViewHolder.onBind(i);
-        final FoodList foodList = orders.get(i);
+    public void onBindViewHolder(@NonNull viewHolder viewHolder, int i) {
+        FoodList foodList = orders.get(i);
         viewHolder.name.setText(foodList.getName());
         viewHolder.price.setText(foodList.getPrice());
+    }
+
+//    @Override
+//    public void onBindViewHolder(@NonNull viewHolder viewHolder, int i) {
+//        FoodList foodList = orders.get(i);
+//        viewHolder.name.setText(foodList.getName());
+//        viewHolder.price.setText(foodList.getPrice());
+//    }
+
+//    @Override
+//    public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int i) {
+//        baseViewHolder.onBind(i);
+//         FoodList foodList = orders.get(i);
+//        viewHolder.name.setText(foodList.getName());
+//        viewHolder.price.setText(foodList.getPrice());
 //        stringLd.observe(binding.getLifecycleOwner(), new Observer<String>() {
 //            @Override
 //            public void onChanged(@Nullable String s) {
@@ -89,56 +104,17 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 //            }
 //        });
 
+
+
+
+
+
+    public void removeItem(int pos){
+        orders.remove(pos);
+        notifyItemRemoved(pos);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return orders == null ? 0 : orders.size();
-    }
 
-    public void add(FoodList response){
-        orders.add(response);
-        notifyItemInserted(orders.size()-1);
-    }
-
-    public void addAll(List<FoodList> items){
-        for(FoodList response: items){
-            add(response);
-        }
-    }
-
-    public void addLoading(){
-        isLoadingAdded = true;
-//        add(new FoodList());
-    }
-
-    private void remove(FoodList foodList){
-        int pos = orders.indexOf(foodList);
-        if(pos > -1){
-            orders.remove(pos);
-            notifyItemRemoved(pos);
-        }
-    }
-
-    private void removeLoading(){
-        isLoadingAdded = false;
-        int pos = orders.size()-1;
-        FoodList foodList = getItem(pos);
-        if(foodList != null){
-            orders.remove(pos);
-            notifyItemRemoved(pos);
-        }
-    }
-
-    public void clear(){
-        while (getItemCount() > 0){
-            remove(getItem(0));
-        }
-    }
-
-    FoodList getItem(int pos){
-        return orders.get(pos);
-    }
 
 //    @Override
 //    public void onBindViewHolder(@NonNull viewHolder viewHolder, int i) {
@@ -177,14 +153,15 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
 
-    public static class viewHolder extends BaseViewHolder{
+    public class viewHolder extends RecyclerView.ViewHolder{
 
         CardView cv;
-        static TextView name;
-        static TextView price;
+        TextView name;
+        TextView price;
         ImageView pic;
         Button cancel, done;
-        viewHolder(View itemView){
+
+        public viewHolder(View itemView){
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
             name = (TextView) itemView.findViewById(R.id.name);
@@ -218,27 +195,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
 
-        @Override
-        public void clear() {
 
-        }
+
     }
 
-    public class FooterHolder extends BaseViewHolder {
-        ProgressBar mProgressBar;
 
-
-        FooterHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        @Override
-        public void clear() {
-
-        }
-
-    }
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {

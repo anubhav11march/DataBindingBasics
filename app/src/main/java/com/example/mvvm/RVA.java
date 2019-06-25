@@ -39,7 +39,7 @@ public class RVA extends RecyclerView.Adapter<RVA.ViewHolderr> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return foodList.size();
     }
 
     class ViewHolderr extends RecyclerView.ViewHolder {
