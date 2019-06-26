@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     private List<FoodList> orders;
     private int itemCount =0;
     private ActivityMainBinding binding;
+    private RecyclerItemTouchHelper rith;
 
     private CoordinatorLayout lt;
 
@@ -101,29 +102,49 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //        });
         orders = new ArrayList<>();
         initializeAdapter();
-
-        ItemTouchHelper.SimpleCallback itemtouchhelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
-        new ItemTouchHelper(itemtouchhelperCallback).attachToRecyclerView(recyclerView);
         loadJsonData1();
 
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback1 = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |  ItemTouchHelper.UP) {
+        rith = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this, new actiosn() {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
-                return false;
+            public void onRightClicked(int position) {
+                rva.removeItem(position);
+                rva.notifyItemRemoved(position);
+                rva.notifyItemRangeChanged(position, rva.getItemCount());
             }
+        });
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(rith);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
 
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                rva.removeItem(i);
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                rith.onDraw(c);
             }
+        });
 
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-
-        new ItemTouchHelper(itemTouchHelperCallback1).attachToRecyclerView(recyclerView);
+//        ItemTouchHelper.SimpleCallback itemtouchhelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this, new actiosn() {
+//        });
+//        new ItemTouchHelper(itemtouchhelperCallback).attachToRecyclerView(recyclerView);
+//
+//
+//        ItemTouchHelper.SimpleCallback itemTouchHelperCallback1 = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |  ItemTouchHelper.UP) {
+//            @Override
+//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+//                rva.removeItem(i);
+//            }
+//
+//            @Override
+//            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//            }
+//        };
+//
+//        new ItemTouchHelper(itemTouchHelperCallback1).attachToRecyclerView(recyclerView);
 
 
 
@@ -242,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     public void initializeAdapter(){
          rva = new RecyclerViewAdapter(orders, this, binding);
         recyclerView.setAdapter(rva);
+        Log.e("AAA", "Initialized");
     }
 
     public void loadJsonData1(){
