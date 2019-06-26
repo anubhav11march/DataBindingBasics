@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.example.mvvm.R;
 
@@ -49,7 +50,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
     public RecyclerViewAdapter(List<FoodList> orders, Context ctx, ActivityMainBinding binding){
         this.orders = orders;
         this.ctx = ctx;
-        this.binding = binding;
+//        this.binding = binding;
     }
 
     @NonNull
@@ -155,7 +156,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
 
     public class viewHolder extends RecyclerView.ViewHolder{
 
-        CardView cv;
+        RelativeLayout cv, cvbg;
         TextView name;
         TextView price;
         ImageView pic;
@@ -163,7 +164,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
 
         public viewHolder(View itemView){
             super(itemView);
-            cv = (CardView) itemView.findViewById(R.id.cv);
+            cv = (RelativeLayout) itemView.findViewById(R.id.cv);
+//            cvbg = (RelativeLayout) itemView.findViewById(R.id.cvbg);
             name = (TextView) itemView.findViewById(R.id.name);
             price = (TextView) itemView.findViewById(R.id.price);
             final ViewGroup transitionsContainer = (ViewGroup) itemView.findViewById(R.id.cv);

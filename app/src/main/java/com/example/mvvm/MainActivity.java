@@ -13,14 +13,18 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     private int itemCount =0;
     private ActivityMainBinding binding;
 
-
+    private CoordinatorLayout lt;
 
     private MutableLiveData<String> stringLd;
 
@@ -69,16 +73,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setLifecycleOwner(this);
-//        setContentView(R.layout.activity_main);
+//        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+//        binding.setLifecycleOwner(this);
+        setContentView(R.layout.activity_main);
 //        ButterKnife.bind(this);
-
+            lt = (CoordinatorLayout) findViewById(R.id.lt);
 //        loadJsondata();
 //        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
 //        swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         linearLayoutManager = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -94,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //        });
         orders = new ArrayList<>();
         initializeAdapter();
-        loadJsonData1();
-        ItemTouchHelper.SimpleCallback itemtouchhelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemtouchhelperCallback).attachToRecyclerView(recyclerView);
 
+        ItemTouchHelper.SimpleCallback itemtouchhelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemtouchhelperCallback).attachToRecyclerView(recyclerView);
+        loadJsonData1();
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback1 = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |  ItemTouchHelper.UP) {
             @Override
@@ -327,18 +332,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
             rva.removeItem(viewHolder.getAdapterPosition());
 
             // showing snack bar with Undo option
-//            Snackbar snackbar = Snackbar
-//                    .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
-//            snackbar.setAction("UNDO", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                    // undo is selected, restore the deleted item
-//                    mAdapter.restoreItem(deletedItem, deletedIndex);
-//                }
-//            });
-//            snackbar.setActionTextColor(Color.YELLOW);
-//            snackbar.show();
+            Snackbar snackbar = Snackbar
+                    .make(lt, name + " Removed", Snackbar.LENGTH_LONG);
+
+
+            snackbar.show();
         }
     }
 
