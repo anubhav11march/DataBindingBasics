@@ -19,7 +19,7 @@
             android:scrollbars="vertical"
             android:id="@+id/rv"
             android:background="#222222"
-            android:padding="15dp"
+
             android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>

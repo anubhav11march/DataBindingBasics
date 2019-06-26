@@ -15,15 +15,19 @@ import android.view.View;
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     private RecyclerItemTouchHelperListener listener;
     private Paint paint;
-    private ColorDrawable bg;
-    private int bgcolor;
+    private ColorDrawable bg, bg1;
+    private int bgcolor, bgcolor1;
+    private boolean swipeBack = false;
+
 
     public RecyclerItemTouchHelper(int dragDir, int swipeDir, RecyclerItemTouchHelperListener listener){
         super(dragDir, swipeDir);
         this.listener = listener;
         paint = new Paint();
         bgcolor = Color.parseColor("#FF0040");
+        bgcolor1 = Color.parseColor("#3104B4");
         bg = new ColorDrawable();
+        bg1 = new ColorDrawable();
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 
     }
@@ -31,6 +35,11 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+    }
+
+    @Override
+    public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+        return 0.7f;
     }
 
     @Override
@@ -66,12 +75,18 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             return;
         }
-        bg.setColor(bgcolor);
-        bg.setBounds(itemView.getRight()+ (int)dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        bg.draw(c);
 
-        final  View foregroundVIew = ((RecyclerViewAdapter.viewHolder) viewHolder).cv;
-        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundVIew, dX, dY, actionState, isCurrentlyActive);
+        bg.setColor(bgcolor);
+        bg.setBounds(itemView.getRight() + (int)dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+        bg.draw(c);
+        bg1.setColor(bgcolor1);
+        bg1.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + (int)dX, itemView.getBottom());
+        bg1.draw(c);
+
+
+
+//        final  View foregroundVIew = ((RecyclerViewAdapter.viewHolder) viewHolder).cv;
+//        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundVIew, dX, dY, actionState, isCurrentlyActive);
     }
 
     @Override
