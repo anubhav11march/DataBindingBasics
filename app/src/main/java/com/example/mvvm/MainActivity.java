@@ -53,7 +53,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 
 public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
     private RecyclerView recyclerView;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefresh;
     private RecyclerView.Adapter adapter;
     private LinearLayoutManager linearLayoutManager;
     private Context ctx;
@@ -81,15 +81,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //        ButterKnife.bind(this);
             lt = (CoordinatorLayout) findViewById(R.id.lt);
 //        loadJsondata();
-//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        swipeRefresh= (SwipeRefreshLayout) findViewById(R.id.pullToRefresh);
 //        swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        linearLayoutManager = new LinearLayoutManager(ctx);
-        recyclerView.setLayoutManager(linearLayoutManager);
+
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                onStart();
+                swipeRefresh.setRefreshing(false);
+            }
+        });
 //        recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 //        rva = new RecyclerViewAdapter(orders, this);
 //        vm model = ViewModelProviders.of(this).get(vm.class);
@@ -100,27 +104,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //                recyclerView.setAdapter(adapter);
 //            }
 //        });
-        orders = new ArrayList<>();
-        initializeAdapter();
-        loadJsonData1();
 
-        rith = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this, new actiosn() {
-            @Override
-            public void onRightClicked(int position) {
-                rva.removeItem(position);
-                rva.notifyItemRemoved(position);
-                rva.notifyItemRangeChanged(position, rva.getItemCount());
-            }
-        });
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(rith);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                rith.onDraw(c);
-            }
-        });
 
 //        ItemTouchHelper.SimpleCallback itemtouchhelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this, new actiosn() {
 //        });
@@ -204,7 +188,41 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     }
 
-//    private void prepareCart() {
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        linearLayoutManager = new LinearLayoutManager(ctx);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        orders = new ArrayList<>();
+        initializeAdapter();
+        loadJsonData1();
+
+        rith = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this, new actiosn() {
+            @Override
+            public void onRightClicked(int position) {
+                rva.removeItem(position);
+                rva.notifyItemRemoved(position);
+                rva.notifyItemRangeChanged(position, rva.getItemCount());
+            }
+        });
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(rith);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                rith.onDraw(c);
+            }
+        });
+    }
+
+
+    //    private void prepareCart() {
 //        JsonArrayRequest request = new JsonArrayRequest(URL,
 //                new Response.Listener<JSONArray>() {
 //                    @Override

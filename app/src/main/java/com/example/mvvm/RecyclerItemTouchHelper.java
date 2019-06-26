@@ -40,8 +40,8 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         this.buttonsActions = buttonsActions;
         this.listener = listener;
         paint = new Paint();
-        bgcolor = Color.parseColor("#FF0040");
-        bgcolor1 = Color.parseColor("#3104B4");
+        bgcolor = Color.parseColor("#58ACFA");
+        bgcolor1 = Color.parseColor("#FA5882");
         bg = new ColorDrawable();
         bg1 = new ColorDrawable();
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -119,7 +119,10 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 //        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundVIew, dX, dY, actionState, isCurrentlyActive);
     }
 
-    private void setTouchListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
+    private void setTouchListener(final Canvas c, final RecyclerView recyclerView,
+                                  final RecyclerView.ViewHolder viewHolder,
+                                  final float dX, final float dY,
+                                  final int actionState, final boolean isCurrentlyActive) {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -190,12 +193,12 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         View itemView =viewHolder.itemView;
         Paint p = new Paint();
         RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthh, itemView.getBottom());
-        p.setColor(Color.BLUE);
+        p.setColor(Color.parseColor("#58ACFA"));
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("EDIT", c, leftButton, p);
 
         RectF rightButton = new RectF(itemView.getRight() - buttonWidthh, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.RED);
+        p.setColor(Color.parseColor("#FA5882"));
         c.drawRoundRect(rightButton, corners, corners, p);
         drawText("DELETE", c, rightButton, p);
 

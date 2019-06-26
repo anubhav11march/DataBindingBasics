@@ -25,7 +25,7 @@ public class FoodList {
     }
 
     public void setPrice(String price) {
-        this.price = price;
+        this.price = "Rs. "+price;
     }
 
     public FoodList(String name, String price, int picId){

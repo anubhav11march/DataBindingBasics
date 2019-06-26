@@ -6,4 +6,6 @@
     <color name="done">#01DF01</color>
     <color name="white">#FFFFFF</color>
     <color name="cancel">#FF0040</color>
+    <color name="del">#FA5882</color>
+    <color name="edit">#58ACFA</color>
 </resources>

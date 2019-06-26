@@ -76,7 +76,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
     public void onBindViewHolder(@NonNull viewHolder viewHolder, int i) {
         FoodList foodList = orders.get(i);
         viewHolder.name.setText(foodList.getName());
-        viewHolder.price.setText(foodList.getPrice());
+        viewHolder.price.setText("Rs. " +foodList.getPrice());
     }
 
 //    @Override
