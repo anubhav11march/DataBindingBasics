@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
@@ -50,6 +51,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        Log.v("AAA", "getmovementflags");
         return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
     }
 
@@ -57,12 +59,14 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+        Log.v("AAA", "onmove");
         return false;
     }
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 //        listener.onSwiped(viewHolder, i, viewHolder.getAdapterPosition());
+        Log.v("AAA", "onswiped");
     }
 
 //    @Override
@@ -76,17 +80,21 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        Log.v("AAA", "onchilddrAW");
         if(actionState == ACTION_STATE_SWIPE){
             if(buttonsState != ButtonsState.GONE){
                 if(buttonsState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
                 if(buttonsState == ButtonsState.RIGHT_VISIBLE) dX = Math.min(dX, -buttonWidth);
+                Log.v("AAA", "onchilddraw1");
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
             else {
+                Log.v("AAA", "onchilddraw2");
                 setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }
         if(buttonsState == ButtonsState.GONE){
+            Log.v("AAA", "onchilddraw3");
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
         currentItemVIewHodler =viewHolder;
@@ -123,6 +131,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
                                   final RecyclerView.ViewHolder viewHolder,
                                   final float dX, final float dY,
                                   final int actionState, final boolean isCurrentlyActive) {
+        Log.v("AAA", "setTouchlistener");
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -131,6 +140,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
                     if(dX < -buttonWidth) buttonsState = ButtonsState.RIGHT_VISIBLE;
                     else if(dX > buttonWidth) buttonsState = ButtonsState.LEFT_VISIBLE;
                     if(buttonsState!=ButtonsState.GONE){
+                        Log.v("AAA", "settouchlistener2");
                         setTouchDownListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                         setItemsClickable(recyclerView, false);
                     }
@@ -141,14 +151,19 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     }
 
     private void setTouchDownListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN)
-                    setTouchUpListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                return false;
-            }
-        });
+        getMovementFlags(recyclerView, viewHolder);
+        swipeBack =true;
+        setTouchUpListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+//        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.v("AAA", "settouchdownlistener");
+//                if(event.getAction() == MotionEvent.ACTION_DOWN)
+//
+//                return false;
+//            }
+//        });
     }
 
     private void setItemsClickable(RecyclerView recyclerView, boolean isClickable){
@@ -161,33 +176,38 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP){
+                Log.v("AAA", "settouchuplistener");
+//                if(event.getAction() == MotionEvent.ACTION_UP){
                     RecyclerItemTouchHelper.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
                     recyclerView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
+                            Log.v("AAA", "settouchuplisteener2");
                             return false;
                         }
                     });
                     setItemsClickable(recyclerView, true);
-                    swipeBack = false;
+                    swipeBack = true;
                     if(buttonsActions!=null && buttonsInstance != null && buttonsInstance.contains(event.getX(), event.getY())){
                         if (buttonsState == ButtonsState.LEFT_VISIBLE) {
+                            Log.v("AAA", "setouchuplistener3");
                             buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
                         }
                         else if (buttonsState == ButtonsState.RIGHT_VISIBLE) {
+                            Log.v("AAA", "setouchuplistener4");
                             buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
                         }
                     }
                     buttonsState = ButtonsState.GONE;
                     currentItemVIewHodler = null;
-                }
+
                 return false;
             }
         });
     }
 
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder){
+        Log.v("AAA", "drawbuttons");
         float buttonWidthh = buttonWidth -20;
         float corners = 10;
         View itemView =viewHolder.itemView;
@@ -210,6 +230,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     }
 
     public void onDraw(Canvas c){
+        Log.v("AAA", "ondraw");
         if(currentItemVIewHodler != null){
             drawButtons(c, currentItemVIewHodler);
         }
@@ -231,6 +252,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
+        Log.v("AAA","converttoabsolute");
         if (swipeBack) {
             swipeBack = buttonsState != ButtonsState.GONE;
             return 0;

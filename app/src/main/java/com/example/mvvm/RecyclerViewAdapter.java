@@ -1,9 +1,11 @@
 package com.example.mvvm;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -28,11 +30,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.example.mvvm.R;
 
-import com.example.mvvm.databinding.ActivityMainBinding;
+
 import com.transitionseverywhere.extra.Scale;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,10 +47,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
     public static final int ITEM =0;
     public static final int LOADING = 1;
     private boolean isLoadingAdded = false;
-    private ActivityMainBinding binding;
+
     private MutableLiveData<String> stringLd;
 
-    public RecyclerViewAdapter(List<FoodList> orders, Context ctx, ActivityMainBinding binding){
+    public RecyclerViewAdapter(List<FoodList> orders, Context ctx){
         this.orders = orders;
         this.ctx = ctx;
 //        this.binding = binding;
@@ -113,6 +116,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
     public void removeItem(int pos){
         orders.remove(pos);
         notifyItemRemoved(pos);
+
     }
 
 
@@ -160,7 +164,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
         TextView name;
         TextView price;
         ImageView pic;
-        Button cancel, done;
+        Button cancel, done, cancell, donee;
 
         public viewHolder(View itemView){
             super(itemView);
@@ -171,36 +175,84 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewH
             final ViewGroup transitionsContainer = (ViewGroup) itemView.findViewById(R.id.cv);
             cancel = (Button) transitionsContainer.findViewById(R.id.done);
             done = (Button) transitionsContainer.findViewById(R.id.cancel);
+            cancell = (Button) transitionsContainer.findViewById(R.id.cancell);
+            donee = (Button) transitionsContainer.findViewById(R.id.donee);
 
+            name.setText("momos");
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TransitionManager.beginDelayedTransition(transitionsContainer);
-                    done.setTextColor(ContextCompat.getColor(ctx, R.color.white));
-                    done.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(ctx, R.color.done)));
-                    done.setText("Completed");
+
                     cancel.setVisibility(View.GONE);
+                    done.setText("Completed");
+                    done.setBackground(ctx.getDrawable(R.drawable.doneee));
+                    done.setTextColor(ContextCompat.getColor(ctx, android.R.color.white));
+
+//                    TransitionManager.beginDelayedTransition(transitionsContainer);
+//                    done.setVisibility(View.GONE);
+//                    cancel.setVisibility(View.GONE);
+//
+////                    done.setTextColor(ContextCompat.getColor(ctx, R.color.white));
+////                    done.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(ctx, R.color.done)));
+////                    done.setText("Completed");
+//                    donee.setVisibility(View.VISIBLE);
+//
+//                    donee.startAnimation(AnimationUtils.loadAnimation(ctx, R.anim.slide_down));
                 }
             });
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TransitionManager.beginDelayedTransition(transitionsContainer);
 
                     done.setVisibility(View.GONE);
-                    cancel.setTextColor(ContextCompat.getColor(ctx, R.color.white));
-                    cancel.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(ctx, R.color.cancel)));
                     cancel.setText("Cancelled");
+                    cancel.setBackground(ctx.getDrawable(R.drawable.cancelll));
+                    cancel.setTextColor(ContextCompat.getColor(ctx, android.R.color.white));
+
+
+//                    TransitionManager.beginDelayedTransition(transitionsContainer);
+//                        done.setVisibility(View.GONE);
+//                        cancel.setVisibility(View.GONE);
+//                        cancell.setVisibility(View.VISIBLE);
+//
+//                        cancell.startAnimation(AnimationUtils.loadAnimation(ctx, R.anim.slide_down));
+
 
                 }
             });
+
         }
 
 
 
 
     }
+    public  boolean resp = false;
 
+    public boolean showAlert(){
+
+        final AlertDialog.Builder builder =  new AlertDialog.Builder(ctx);
+        builder.setCancelable(false);
+
+        builder.setTitle("Cancel");
+        builder.setMessage("Do you really want to Cancel?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resp = true;
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resp = false;
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+        return resp;
+    }
 
 
     @Override

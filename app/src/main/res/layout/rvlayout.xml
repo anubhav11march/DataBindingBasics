@@ -25,8 +25,9 @@
 
     <RelativeLayout
         android:id="@+id/cv"
-        android:background="#D8D8D8"
+        android:background="#FBEFEF"
         android:layout_marginTop="0dp"
+
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
@@ -68,6 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_weight="1"
+                android:animateLayoutChanges="true"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <Button
@@ -92,7 +95,28 @@
                     android:textColor="#01DF01"
                     android:layout_weight="1"
                     android:text="Complete" />
-
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/donee"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/doneee"
+                    android:textSize="10dp"
+                    android:visibility="gone"
+                    android:textColor="#FFFFFF"
+                    android:layout_weight="1"
+                    android:text="Completed" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cancell"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/cancelll"
+                    android:textSize="10dp"
+                    android:visibility="gone"
+                    android:textColor="#FFFFFF"
+                    android:layout_weight="1"
+                    android:text="Cancelled" />
 
             </LinearLayout>
 

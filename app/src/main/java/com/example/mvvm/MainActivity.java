@@ -35,7 +35,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.mvvm.databinding.ActivityMainBinding;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     private RecyclerViewAdapter rva;
     private List<FoodList> orders;
     private int itemCount =0;
-    private ActivityMainBinding binding;
+
     private RecyclerItemTouchHelper rith;
 
     private CoordinatorLayout lt;
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //                    @Override
 //                    public void onResponse(JSONArray response) {
 //                        if (response == null) {
-//                            Toast.makeText(getApplicationContext(), "Couldn't fetch the menu! Pleas try again.", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "Couldn't fetch the menu! Please try again.", Toast.LENGTH_LONG).show();
 //                            return;
 //                        }
 //
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //    }
 
     public void initializeAdapter(){
-         rva = new RecyclerViewAdapter(orders, this, binding);
+         rva = new RecyclerViewAdapter(orders, this);
         recyclerView.setAdapter(rva);
         Log.e("AAA", "Initialized");
     }
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                         orders.add(food);
                     }
 
-                    adapter = new RecyclerViewAdapter(orders, getApplicationContext(), binding);
+                    adapter = new RecyclerViewAdapter(orders, getApplicationContext());
                     recyclerView.setAdapter(adapter);
                 } catch (JSONException e) {
                     Log.v("AAA", "Caught");
