@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="food"
+            type="com.example.databindingex.Food" />
+
+        <variable
+            name="clickHandler"
+            type="com.example.databindingex.MainActivity.ClickHandler" />
+
+    </data>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@{food.name}"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="50dp"
+        android:id="@+id/name"
+         />
+
+    <TextView
+        android:gravity="center"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@{food.price}"
+        android:layout_margin="30dp"
+        android:id="@+id/price"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@={food.name}"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buy"
+        android:onClick="@{clickHandler::onBuyClicked}"
+        android:text="Buy"/>
+    <Button
+        android:id="@+id/cancel"
+        android:onClick="@{clickHandler::onCancelClicked}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel" />
+
+</LinearLayout>
+</layout>
